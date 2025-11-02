@@ -1,17 +1,17 @@
-# Do **not** use this yml for production. It is not up-to-date.
-# Use https://docs.postiz.com/installation/docker-compose
-# This is only for the dev enviroment
+# Do **not** use this yml for production.
+# This is only for the dev environment
+# SankalpSocial - Docker Alpine Build Configuration
 
 services:
-  postiz-app:
+  sankalpsocial-app:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: postiz-app
+    container_name: sankalpsocial-app
     restart: always
     environment:
-      DATABASE_URL: postgresql://postiz-local:postiz-local-pwd@postiz-postgres:5432/postiz-db-local
-      REDIS_URL: redis://postiz-redis:6379
+      DATABASE_URL: postgresql://sankalpsocial-local:sankalpsocial-local-pwd@sankalpsocial-postgres:5432/sankalpsocial-db-local
+      REDIS_URL: redis://sankalpsocial-redis:6379
       JWT_SECRET: dev-jwt-secret-change-in-production
       MAIN_URL: http://localhost:4200
       FRONTEND_URL: http://localhost:4200
@@ -28,38 +28,38 @@ services:
     volumes:
       - uploads-volume:/app/uploads
     depends_on:
-      - postiz-postgres
-      - postiz-redis
+      - sankalpsocial-postgres
+      - sankalpsocial-redis
     networks:
-      - postiz-network
-  postiz-postgres:
+      - sankalpsocial-network
+  sankalpsocial-postgres:
     # ref: https://hub.docker.com/_/postgres
     image: postgres:17-alpine # 17.0
-    container_name: postiz-postgres
+    container_name: sankalpsocial-postgres
     restart: always
     environment:
-      POSTGRES_PASSWORD: postiz-local-pwd
-      POSTGRES_USER: postiz-local
-      POSTGRES_DB: postiz-db-local
+      POSTGRES_PASSWORD: sankalpsocial-local-pwd
+      POSTGRES_USER: sankalpsocial-local
+      POSTGRES_DB: sankalpsocial-db-local
     volumes:
       - postgres-volume:/var/lib/postgresql/data
     ports:
       - 5432:5432
     networks:
-      - postiz-network
-  postiz-redis:
+      - sankalpsocial-network
+  sankalpsocial-redis:
     # ref: https://hub.docker.com/_/redis
     image: redis:7-alpine # 7.4.0
-    container_name: postiz-redis
+    container_name: sankalpsocial-redis
     restart: always
     ports:
       - 6379:6379
     networks:
-      - postiz-network
-  postiz-pg-admin:
+      - sankalpsocial-network
+  sankalpsocial-pg-admin:
     # ref: https://hub.docker.com/r/dpage/pgadmin4/tags
     image: dpage/pgadmin4:latest
-    container_name: postiz-pg-admin
+    container_name: sankalpsocial-pg-admin
     restart: always
     ports:
       - 8081:80
@@ -67,19 +67,19 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
     networks:
-      - postiz-network
-  postiz-redisinsight:
+      - sankalpsocial-network
+  sankalpsocial-redisinsight:
     # ref: https://hub.docker.com/r/redis/redisinsight
     image: redis/redisinsight:latest
-    container_name: postiz-redisinsight
+    container_name: sankalpsocial-redisinsight
     links:
-      - postiz-redis
+      - sankalpsocial-redis
     ports:
       - '5540:5540'
     volumes:
       - redisinsight:/data
     networks:
-      - postiz-network
+      - sankalpsocial-network
     restart: always
 
 volumes:
@@ -90,5 +90,5 @@ volumes:
     external: false
 
 networks:
-  postiz-network:
+  sankalpsocial-network:
     external: false
