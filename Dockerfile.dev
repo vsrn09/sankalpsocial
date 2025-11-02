@@ -13,11 +13,10 @@ WORKDIR /app
 COPY . /app
 COPY var/docker/nginx.conf /etc/nginx/nginx.conf
 
+ENV STORAGE_PROVIDER=local
 RUN pnpm install --ignore-scripts
 RUN pnpm rebuild bcrypt
-RUN pnpm run update-plugins
 RUN npx prisma generate --schema ./libraries/nestjs-libraries/src/database/prisma/schema.prisma
-ENV STORAGE_PROVIDER=local
 RUN NODE_OPTIONS="--max-old-space-size=4096" pnpm run build
 
 CMD ["sh", "-c", "nginx && pnpm run pm2"]
